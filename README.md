@@ -49,8 +49,10 @@ pass : 123456789
 
 Vous pouvez passer par mon [twitter](https://twitter.com/SkaalZealot?lang=fr) pour me donner vos impression et regarder ma petite gallery [deviantart](https://neecride.deviantart.com) 
 
-Pour finir ce CMS a été développer pour apprendre je n'ai pas de diplôme n'y fait d'école dans ce domaine il n'a donc rien d'un CMS pro comme wordpress.   
+Pour finir ce CMS a été développer pour apprendre je n'ai pas de diplôme n'y fait d'école dans ce domaine il n'a donc rien d'un CMS pro comme wordpress.
+
+Vous devrez télécharger certaine librairies vous même comme HTMLpurifier j'indiquerais l'endroit avec un readme.
 
 Le mots de la fin :
 
-**Et n'oubliez pas quand développement comme dans la vie on apprend tous les jours !!!**
+**Et n'oubliez pas quand développement comme dans la vie on apprend tout les jours !!!**
