@@ -1,0 +1,192 @@
+#--------------------------------------------------
+# Répertoire : www
+#--------------------------------------------------
+
+# Le serveur doit suivre les liens symboliques :
+Options +FollowSymlinks
+AddDefaultCharset UTF-8
+
+# Activation du module de réécriture d'URL :
+<IfModule mod_rewrite.c>
+RewriteEngine on
+</IfModule>
+#--------------------------------------------------
+# Règles de réécriture d'URL :
+#--------------------------------------------------
+RewriteBase /
+
+DirectoryIndex index.php?page=home
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+ErrorDocument 404 /error
+
+#-------------------------------------------------
+# Règles de base page id slug pagination
+#-------------------------------------------------
+
+RewriteRule ^([a-zA-Z0-9\-]+)/?$ index.php?page=$1 [NC,L]
+
+RewriteRule ^home/([a-zA-Z0-9\-]+)/?$ index.php?page=home&pager=$1 [NC,L]
+
+#---------------------------------------------
+# Partie post etc...
+#---------------------------------------------
+
+#post
+RewriteRule ^post/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=post&id=$1&slug=$2 [NC,L]
+
+#post
+RewriteRule ^post-delchildreen/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=post&id=$1&delchildreen=$2&csrf=$3 [NC,L]
+
+#post likes
+RewriteRule ^likes/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=likes&id=$1&slug=$2&t=$3&csrf=$4 [NC,L]
+
+#categorie
+RewriteRule ^categories/([a-zA-Z0-9\-]+)/?$ index.php?page=categories&id=$1 [NC,L]
+
+#autor
+RewriteRule ^auteur/([a-zA-Z0-9\-]+)/?$ index.php?page=auteur&username=$1 [NC,L]
+
+#------------------------------------
+# Partie account edite delete etc...
+#------------------------------------
+
+#mail confirm account
+RewriteRule ^confirm/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=confirm&username=$1&token=$2 [NC,L]
+
+#lock account
+RewriteRule ^account-lock/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=account&lock=$1&csrf=$2 [NC,L]
+
+#reset password link
+RewriteRule ^reset/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=reset&username=$1&token=$2 [NC,L]
+
+#------------------------------------
+# Partie forum
+#------------------------------------
+
+#index.php?page=viewforums&id=1&slug=forum-visiteurs
+
+#page creatopic
+RewriteRule ^creattopic/([a-zA-Z0-9\-]+)/?$ index.php?page=creattopic&id=$1 [NC,L]
+
+#page editetopic
+RewriteRule ^editetopic/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=editetopic&id=$1&slug=$2 [NC,L]
+
+#page editetopic avec pagination
+RewriteRule ^editetopic/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=editetopic&id=$1&slug=$2&pager=$3 [NC,L]
+
+#page editereponse
+RewriteRule ^editerep/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=editerep&id=$1&slug=$2 [NC,L]
+
+#page editereponse avec pagination
+RewriteRule ^editerep/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=editerep&id=$1&slug=$2&pager=$3 [NC,L]
+
+#page viewforums
+RewriteRule ^viewforums/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=viewforums&id=$1&slug=$2 [NC,L]
+
+#page viewtopic
+RewriteRule ^viewtopic/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=viewtopic&id=$1&slug=$2 [NC,L]
+
+#page viewtopic pagination
+RewriteRule ^viewtopic/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=viewtopic&id=$1&slug=$2&pager=$3 [NC,L]
+
+
+#------------------------------------
+# Partie works edite delete etc...
+#------------------------------------
+
+#works edite
+RewriteRule ^works-edit/([a-zA-Z0-9\-]+)/?$ index.php?page=works-edit&id=$1 [NC,L]
+
+#mise en avant d'une image
+RewriteRule ^works-edit-forward/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=works-edit&forward-image=$1&id=$2&csrf=$3 [NC,L]
+
+#retiré de la mise en avant
+RewriteRule ^works-edit-backward/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=works-edit&backward-image=$1&id=$2&csrf=$3 [NC,L]
+
+#supprimer l'image
+RewriteRule ^works-edit-delete/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=works-edit&delete-image=$1&csrf=$2 [NC,L]
+
+#mise en avant d'un article
+RewriteRule ^works-forward/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=works&forward=$1&csrf=$2 [NC,L]
+
+#retiré l'article de l'avant
+RewriteRule ^works-backward/([a-zA-Z0-9\-]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=works&backward=$1&csrf=$2 [NC,L]
+
+#supprimer l'article
+RewriteRule ^works-delete/([0-9]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=works&delete=$1&csrf=$2 [NC,L]
+
+#---------------------------------------------
+# Partie catégory works edite delete etc....
+#---------------------------------------------
+
+#editer la category
+RewriteRule ^category-edit/([0-9]+)/?$ index.php?page=category-edit&id=$1 [NC,L]
+
+#supprimer la category
+RewriteRule ^category-delete/([0-9]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=category&delete=$1&csrf=$2 [NC,L]
+
+#---------------------------------------------
+# Partie catégories forum edite delete etc....
+#---------------------------------------------
+
+#editer la category
+RewriteRule ^categories-edit-forums/([0-9]+)/?$ index.php?page=categories-edit-forums&id=$1 [NC,L]
+
+#editer le forum
+RewriteRule ^forums-edit/([0-9]+)/?$ index.php?page=forums-edit&id=$1 [NC,L]
+
+#supprimer le forum
+RewriteRule ^forums-edit-delete/([0-9]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=forums-edit&delete=$1&csrf=$2 [NC,L]
+
+#supprimer la category
+RewriteRule ^categories-forums-delete/([0-9]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=categories-forums&delete=$1&csrf=$2 [NC,L]
+
+#---------------------------------------------
+# Partie parametres edite delete etc....
+#---------------------------------------------
+
+#activer les commentaire
+RewriteRule ^parameters-activ/([0-9]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=parameters&activ=$1&csrf=$2 [NC,L]
+
+#desactiver les commentaire
+RewriteRule ^parameters-del/([0-9]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=parameters&del=$1&csrf=$2 [NC,L]
+
+#---------------------------------------------
+# Partie admin edite delete etc....
+#---------------------------------------------
+
+#activer le commentaire
+RewriteRule ^admin-update/([0-9]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=admin&update=$1&csrf=$2 [NC,L]
+
+#supprimer le commentaire
+RewriteRule ^admin-delete/([0-9]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=admin&delete=$1&csrf=$2 [NC,L]
+
+#---------------------------------------------
+# Partie users edite delete etc....
+#---------------------------------------------
+
+#editer l'user
+RewriteRule ^users-edit/([0-9]+)/?$ index.php?page=users-edit&id=$1 [NC,L]
+
+#activer l'utilisateur
+RewriteRule ^users-update/([0-9]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=users&update=$1&csrf=$2 [NC,L]
+
+#supprimer l'utilisateur
+RewriteRule ^users-delete/([0-9]+)/([a-zA-Z0-9\-]+)/?$ index.php?page=users&delete=$1&csrf=$2 [NC,L]
+
+#---------------------------------------------
+# Cash en chantier
+#---------------------------------------------
+
+# cash image
+#RewriteRule ^images/(.*)\-([a-f0-9]+)\.(jpg|png)/?$ views/images/$1.$3 [QSA,NC,L]
+
+# cash css
+#RewriteRule ^css/(.*)\-([a-f0-9]+)\.css/?$ views/css/$1.css [QSA,NC,L]
+
+# cash JS
+#RewriteRule ^js/(.*)-([a-f0-9]+).js/?$ views/js/$1.js [QSA,NC,L]
+#--------------------------------------------------
