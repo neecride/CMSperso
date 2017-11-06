@@ -3,7 +3,7 @@ Create to learn PHP
 
 **Bonjour**
 
-Après quelque mois de __test__ de `code` de __**test**__ et de `code` je suis fier de vous présenter mon CMS perso (ce n'est pas de l'orienter objet hein) que j'ai fais moi !!
+Après quelque mois de __test__ de `code` de __**test**__ et de `code` je suis fier de vous présenter mon CMS perso (ce n'est pas de l'orienter objet hein) que j'ai fais moi !! **il faut juste attendre l'arriver de tout les fichiers** 
 
 Il est... enfin **presque...** complet la liste des ajout a faire par la suite :
 
@@ -12,17 +12,19 @@ Il est... enfin **presque...** complet la liste des ajout a faire par la suite :
 3. l'ajout d'une pagination sur la liste des articles, forum, catégories etc... en cas de long liste dans l'administration.
 4. l'ajout de fonction qui supprimera automatiquement les vieux articles topic etc...
 5. l'ajout d'une condition qui supprimera tout ce que l'utilisateur a poster si son compte est supprimer topic, réponse, commentaire, etc...
-6. L'ajout d'une fonction qui supprime les commentaire parent et enfant directement sur la page dédiée sans passer par l'administration. 
-7. l'ajout de correction sur les thèmes de base.
+6. L'ajout d'une fonction qui supprime les commentaire parent et enfant directement sur la page post sans passer par l'administration. 
+7. l'ajout de correction mineur sur les thèmes de base.
 8. l'ajout peut être d'une vrai administrations séparé.
 9. l'ajout d'un ordre pour la liste des forum pas du tout important !!
+10. l'ajout bien plus tard d'un système de cache
+11. correction d'un bug qui ne supprime pas toutes les images liée a un article  
 
 __Et d'autre choses__ 
 
 Nous avons bien sur pleins de chose qui fonctionne sur ce CMS, a vous de tester. 
-mais comme je boss dessus seul je n'ai pas forcément pu tester chaque faille qui pourrait exister je vous laisse me faire un listing des problème avec une **solution** (si vous la connaissez).
+mais comme je boss dessus seul je n'ai pas forcément pu tester chaque faille qui pourrait exister je vous laisse me faire un listing des problème avec une **solution** (si vous la connaissez) et si vous ajoutez des modif de fonction ou correction faite en le partage :) .
 
-Le site en entier utilise un éditeur [markdown](http://www.codingdrama.com/bootstrap-markdown/) la prévisualisation ne fonctionne pas au moment ou j'écrit ces lignes je ne connait pas trop le javascript, j'utilise un [parser](https://github.com/erusev/parsedown) ainsi que [HTMLprifier](http://htmlpurifier.org/) pour vous simplifier l'édition.
+Le site en entier utilise un éditeur [markdown](http://www.codingdrama.com/bootstrap-markdown/) il faut installer deux js séparé pour que les prévisualisation fonction, j'utilise un [parser](https://github.com/erusev/parsedown) ainsi que [HTMLprifier](http://htmlpurifier.org/) pour vous simplifier l'édition.
 
 J'utilise de plus [google-prettify](https://github.com/google/code-prettify)
 
@@ -42,10 +44,7 @@ Les fameux titre :
 
 La liste est longue donc je vous laisse découvrir ça tout seul comme des grand !!
 
-Vous pouvez passer sur le fichier install.php pour installer le tout sur une base de donnée MYSQL, l'installation va créer un utilisateur par défaut 
-
-username : admin 
-pass : 123456789
+Vous pouvez passer sur le fichier install.php pour installer le tout sur une base de donnée MYSQL, avec l'installation vous pourez créer un compte et utiliser le cms tout de suite.
 
 Vous pouvez passer par mon [twitter](https://twitter.com/SkaalZealot?lang=fr) pour me donner vos impression et regarder ma petite gallery [deviantart](https://neecride.deviantart.com) 
 
