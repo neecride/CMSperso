@@ -3,7 +3,6 @@ is_admin();
 /*********
 * activation
 ***********/
-
 if(isset($_GET['forward'])){
     //die;
     checkCsrf();
@@ -52,19 +51,9 @@ if(isset($_GET['delete'])){
     
     $image = $select->fetchObject();
     
-    if($select->rowCount() == 1){
-        
-        $images=glob(IMAGES . '/works/' . pathinfo($image->name, PATHINFO_FILENAME) . '_*x*.*');
-
-        if(is_array($images)){
-            foreach($images as $v){
-                unlink($v);
-            }
-        }
-        unlink(IMAGES . '/works/' . $image->name);
+    if($select->rowCount() >= 1){
 
         //En cas de supression on supprime la total image et commentaire 
-
         $db->prepare("DELETE FROM images WHERE work_id = ?")->execute($id);
 
         sleep(2);
