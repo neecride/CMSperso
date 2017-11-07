@@ -60,7 +60,7 @@ $StartPager = ($CurrentPage-1)*$PagesMax;
 
 $limited = $StartPager .','. $PagesMax;
 
-//liste works
+//liste works order by nblikes
 $req = $db->query("
 
    SELECT   works.id,
@@ -77,11 +77,17 @@ $req = $db->query("
             users.username,
             users.avatar,
             comments.post_id,
-            COUNT(comments.post_id) AS nbcoms
+            COUNT(comments.post_id) AS nbcoms,
+            COUNT(likes.id) AS nblikes,
+            COUNT(dislikes.id) AS nbdislikes
 
     FROM works
 
     LEFT JOIN users ON users.username = works.writer
+    
+    LEFT JOIN likes ON likes.id_article = works.id
+    
+    LEFT JOIN dislikes ON dislikes.id_article = works.id
 
     LEFT JOIN categories ON works.category_id=categories.id
 
@@ -93,25 +99,6 @@ $req = $db->query("
 
     GROUP BY works.id
 
-    ORDER BY works.date DESC LIMIT $limited
+    ORDER BY nblikes DESC LIMIT $limited
 
 ");
-
-/**********
-* like dislike
-***********/
-function likes($id){
-    global $db;
-    $likes = $db->prepare('SELECT id FROM likes WHERE id_article = ?');
-    $likes->execute([$id]);
-    $likes = $likes->rowCount();
-    return $likes;
-}
-
-function dislikes($id){
-    global $db;
-    $dislikes = $db->prepare('SELECT id FROM dislikes WHERE id_article = ?');
-    $dislikes->execute([$id]);
-    $dislikes = $dislikes->rowCount();
-    return $dislikes;
-}
