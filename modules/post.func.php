@@ -11,28 +11,30 @@ else if(isset($_POST['commentary'])){//on sauvegarde les commentaires
         $email = isset($_SESSION['auth']->email) && !empty($_SESSION["auth"]->email) ? $_SESSION["auth"]->email : '' ;
         $comment = trim($_POST['comment']);
         $error = '';
-        
-        if(!empty($_SESSION['commentwin']) && $_SESSION['commentwin'] >= 2){
-            $error = errors(['Il vous faut attendre '. date('H\hi',$_SESSION['commenttime']) .' pour réessayer']);
-        }
-        if(empty($username) || !preg_match('/^[a-zA-Z0-9_]+$/', $username)){
-
-            $error .= errors(["Votre username n'est pas valide selement des minuscules/majuscule et underscore (_)"]);
-
-        }if((strlen($username) < 3) || (strlen($username) > 30)){
-
-            $error .= errors(['Le username doit contenir au moins 4 min et 30 max caractères']);
-
-        }if(empty(filter_var($email, FILTER_VALIDATE_EMAIL)) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
-
-            $error .= errors(["Votre email n'est pas valide"]);
-
-        }if(strlen($comment) < 20 || (strlen($comment) > 500)){
-
-            $error .= errors(['Votre commentaire doit avoir au moins 20 caractères et pas plus de 500']);
-
-        }else if(empty($error)){
+        if($param[3]->param_activ == 'oui' || isset($_SESSION["auth"]->authorization) && !empty($_SESSION['auth']->authorization == 4)){
             
+        
+            if(!empty($_SESSION['commentwin']) && $_SESSION['commentwin'] >= 2){
+                $error = errors(['Il vous faut attendre '. date('H\hi',$_SESSION['commenttime']) .' pour réessayer']);
+            }
+            if(empty($username) || !preg_match('/^[a-zA-Z0-9_]+$/', $username)){
+
+                $error .= errors(["Votre username n'est pas valide selement des minuscules/majuscule et underscore (_)"]);
+
+            }if((strlen($username) < 3) || (strlen($username) > 30)){
+
+                $error .= errors(['Le username doit contenir au moins 4 min et 30 max caractères']);
+
+            }if(empty(filter_var($email, FILTER_VALIDATE_EMAIL)) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
+
+                $error .= errors(["Votre email n'est pas valide"]);
+
+            }if(strlen($comment) < 20 || (strlen($comment) > 500)){
+
+                $error .= errors(['Votre commentaire doit avoir au moins 20 caractères et pas plus de 500']);
+
+            }else if(empty($error)){
+
                 if(isset($_SESSION["auth"]->authorization) && !empty($_SESSION["auth"]->authorization < 4)){
                     if(empty($_SESSION['commentwin'])){
                         $_SESSION['commentwin'] = 1;
@@ -41,47 +43,52 @@ else if(isset($_POST['commentary'])){//on sauvegarde les commentaires
                         $_SESSION['commentwin']++;
                     }
                 }
-            
+
             $parent_id = isset($_POST['parent_id']) ? $_POST['parent_id'] : 0 ;
-            
+
             $depth = 0;
-            
+
             if($parent_id != 0){
-                
+
                 $req = $db->prepare('SELECT id, depth FROM comments WHERE id = ?');
-                    
+
                 $req->execute([$parent_id]);
-            
+
                 $commentary = $req->fetch(); 
-                
-                
+
+
                 if($commentary == false){
-                    
+
                     throw new Exception("Ce parent ID n'existe pas");
-                    
+
                 }
                 $depth = $commentary->depth + 1;
-                
+
             }
             if($depth >= 3){
-                
+
                 setFlash('<strong>Oh oh!</strong> Commentaire incorrect ! <strong>Vous ne pouvez pas répondre à une réponse d\'une réponse</strong>','orange');
                 redirect('post/'. $id.'/'.$_GET['slug']);
-                
+
             }else{
-                
+
                 //si on est admin le commentaire est aciter automatiquement
                 $seen = isset($_SESSION["auth"]->authorization) && !empty($_SESSION["auth"]->authorization == 4) ? 1 : 0 ;
-                
+
                 $i = [$username,$email,$comment,$id,$parent_id,$depth,$seen];
 
-                $req = $db->prepare('INSERT INTO comments SET username = ? ,email = ? ,comment = ? ,post_id = ? ,parent_id = ? ,depth = ? ,seen = ? ,date = NOW()')->execute($i);
-                
+                $req = $db->prepare('INSERT INTO comments SET username = ? ,email = ? ,comment = ? ,post_id = ? ,parent_id = ? ,depth = ? ,seen = ?,date = NOW()')->execute($i);
+
                 setFlash('<strong>Super !</strong> Votre commentaire a bien étais reçu');
                 redirect('post/'. $id.'/'.$_GET['slug']);
-                
+
             }
 
+        }
+    }else{
+            setFlash('Les commentaires sont désactiver vous ne pouvez pas poster','rouge');
+            redirect('error');
+            
         }
     
 }
@@ -143,7 +150,7 @@ function get_post(){//on affiche les articles
 }
 $post = get_post();
 
-if(!empty($_GET['id'] != $post->id) || !empty($post->posted) == "0"){ 
+if(!empty($_GET['id'] != $post->id) || !empty($_GET['slug'] != $post->url)){ 
     setFlash('<strong>Ho ho !</strong> Problème <strong>le slug n\'est pas valide</strong>','orange');
     redirect('home');
 }
@@ -198,26 +205,64 @@ function get_comments(){//on afficher les commentaire
 * like dislike
 ***********/
 
-$likes = $db->prepare('SELECT id FROM likes WHERE id_article = ?');
+$likes = $db->prepare('SELECT * FROM likes WHERE id_article = ?');
 $likes->execute([$_GET['id']]);
+$Likes = $likes->fetchObject();
 $likes = $likes->rowCount();
-$dislikes = $db->prepare('SELECT id FROM dislikes WHERE id_article = ?');
+
+
+
+$dislikes = $db->prepare('SELECT * FROM dislikes WHERE id_article = ?');
 $dislikes->execute([$_GET['id']]);
+$Dislikes = $dislikes->fetchObject();
 $dislikes = $dislikes->rowCount();
 
 
+if($dislikes != NULL){
+
+    if(isset($_SESSION['auth']->id)){
+        $colorDislike = $Dislikes->id_membre == $_SESSION['auth']->id ? 'active_dislike' : ''; 
+    }
+
+}
+
+if($likes != NULL){
+
+    if(isset($_SESSION['auth']->id)){
+        $colorLike = $Likes->id_membre == $_SESSION['auth']->id ? 'active_like' : ''; 
+    }
+
+}
+   
+
+
 /*****
-*supprimer comment enfant
+*supprimer comment 
 *****/
 if(isset($_GET['delchildreen'])){
     
     checkCsrf();
     
-    $id = [intval($_GET['delchildreen'])];
+    //id du commentaire
+    $id = intval($_GET['delchildreen']);
+
+    //id de l'article
+    $post_id = intval($_GET['id']);
     
-    $req = $db->prepare("DELETE FROM comments WHERE id = ?")->execute($id);
+    //on prend les commentaire liée a cette article
+    $req = $db->prepare("SELECT * FROM comments WHERE id = ?");
     
-    setFlash('<strong>Super !</strong> Le commentaire a bien été supprimer <strong>Bien jouer :)</strong>');
+    $req->execute([$id]);
+    
+    $comment = $req->fetch();
+
+    //on supprime le commentaire
+    $db->prepare("DELETE FROM comments WHERE id = ?")->execute([$id]);
+    
+    //on monte tous les enfants
+    $db->prepare("UPDATE comments SET parent_id = ?, depth = depth -1 WHERE parent_id = ?")->execute([$comment->parent_id, $comment->id]);
+    
+    setFlash('Votre commentaire a bien été supprimer');
     
     redirect('post/'. $_GET['id'] .'/'.$post->url);
     
