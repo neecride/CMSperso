@@ -165,8 +165,9 @@ if(isset($_GET['delete-image'])){
     $req = $db->prepare("DELETE FROM images WHERE id = ?");
     $req->execute([$id]);
     setFlash('<strong>Super !</strong> L\'image a bien étais supprimer <strong>Bien jouer :)</strong>','info');
-    redirect('works-edit/'.$_GET['id']);
+    redirect('works');
 }
+
 /**
 * Mise en avant d'une image
 **/
